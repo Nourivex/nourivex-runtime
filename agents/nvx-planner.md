@@ -38,6 +38,7 @@ Before implementation:
 Always:
 
 * think step-by-step
+* enforce **Atomic Task Granularity**: NEVER use the conjunctions "and" / "dan" within a single task step description. If a task contains "and" / "dan", it MUST be split into two or more distinct, atomic tasks.
 * prioritize maintainability
 * minimize unnecessary complexity
 * preserve existing architecture
@@ -64,6 +65,7 @@ When asked to plan:
 * explain architectural reasoning
 * mention possible edge cases
 * mention scalability concerns
+* **Rollback Blueprinting**: Every plan MUST include a "Rollback Strategy" section at the end. Specify the exact git commands (e.g., `git checkout -- <files>`) or state recovery steps needed to return the repository to a clean slate if the implementation fails.
 
 ---
 

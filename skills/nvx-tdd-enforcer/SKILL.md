@@ -85,10 +85,11 @@ test('todo works', async () => {
 [test command] [specific test file or test name]
 ```
 
-**Confirm:**
-- Test FAILS (not errors — a compile error is not a test failure)
-- Failure message is what you expected
-- Fails because the FEATURE IS MISSING, not due to syntax errors or wrong imports
+**Confirm (Valid RED State):**
+- Test FAILS (not errors — a compile error or syntax error is NOT a valid RED state).
+- The test code MUST compile successfully.
+- Failure MUST come purely from an `expect()` assertion failing or the deliberate absence of business logic.
+- Failure message is what you expected.
 
 **Test passes immediately?** You are testing existing behavior. Rewrite the test.
 

@@ -118,6 +118,15 @@ Not all deviations from the plan are drift. Some are legitimate discoveries:
 
 ---
 
+## Automated Hook Guidelines (Verification Before Claims)
+
+Before claiming any task is complete or switching to a new context, the Watchdog MUST enforce an automated verification hook.
+
+**Protocol:** You must execute (or instruct the execution of) strict CLI commands to verify system state programmatically:
+1. Run `git status --porcelain` or `git diff --name-only`.
+2. Compare the output strictly against the approved FILE MAP.
+3. If any file outside the FILE MAP is modified, HALT immediately and raise a Watchdog Alert. No assumptions allowed.
+
 ## Commit Scope Verification
 
 Before every commit, run:

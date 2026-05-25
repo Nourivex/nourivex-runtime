@@ -15,11 +15,14 @@ For every engineering task (Feature, Bug Fix, Refactor), you MUST follow this se
 4. **Execution Phase:** Implement via TDD. Use `nvx-implementer` and `nvx-reviewer`.
 
 ## 🛠️ Mandatory Skills
-Activate these skills via `activate_skill` when their trigger conditions apply:
-- `nvx-goal-preservation`: Start of every task.
-- `nvx-tdd-enforcer`: Every implementation step.
-- `nvx-verification`: Before any completion claim.
-- `nvx-reviewer`: After implementation completion.
+Activate ini melalui `activate_skill` saat pemicunya terpenuhi:
+- `nvx-goal-preservation`: Awal setiap tugas.
+- `nvx-tdd-enforcer`: Setiap langkah implementasi.
+- `nvx-verification`: Sebelum klaim penyelesaian apa pun.
+- `nvx-reviewer`: Setelah implementasi selesai.
+- `nvx-idempotency-guard`: Sebelum menjalankan perintah CLI/skrip destruktif.
+- `nvx-context-pruning`: Setelah tugas diverifikasi HIJAU untuk menjaga fokus.
+- `nvx-dependency-lockdown`: Sebelum menambah atau mengubah dependensi luar.
 
 ## 👥 Partner Agents
 Manage the flow of context between specialized agents using `invoke_agent`. Always provide a **Context Pack** (`CURRENT_STATUS`, `PENDING_CHALLENGES`, `NEXT_GOAL`) when handing off tasks.

@@ -155,15 +155,22 @@ Rules:
 
 ---
 
-## The 3-Strike Rule
+## The 3-Strike Rule and State Dump Protocol
 
 ```
 Fixes attempted: [count]
 
-After 2 failed fixes: STOP. Re-do Phase 1 with all new information gathered.
+After 2 failed fixes: STOP. Initiate State Dump Protocol before any further attempt.
 After 3 failed fixes: STOP. Question the architecture.
 After 3+ fixes: This is an architectural problem, not a bug fix.
 ```
+
+**State Dump Protocol (Mandatory on 2nd Strike):**
+Before attempting a 3rd fix, you MUST output a "State Dump" to prevent random guessing:
+- **Variable State:** Log the values of critical variables right before the crash.
+- **Input Data:** Document the exact payload or input that triggered the error.
+- **Memory/Execution Structure:** Trace the exact call stack and structural state at the moment of failure.
+Analyze this dump explicitly before forming the next hypothesis.
 
 **3+ failed fixes = question the pattern, not the implementation:**
 - Is this the wrong approach fundamentally?

@@ -21,9 +21,10 @@ Your primary goal is:
 # Core Responsibilities
 
 1. **Information Gathering:** Map the territory before proposing any changes.
-2. **Assumption Testing:** Validate what is true about the codebase, not what you think might be true.
-3. **Reference Discovery:** Find similar working examples in the repository to maintain consistency.
-4. **Approach Formulation:** Present clear, alternative paths to solve the goal.
+2. **Context-Boundary Discovery:** Actively search for Constraints & Limitations of the libraries/tools in use. You MUST check dependency versions (e.g., `package.json`, `go.mod`) to ensure no breaking changes contradict your proposed approach.
+3. **Assumption Testing:** Validate what is true about the codebase, not what you think might be true.
+4. **Reference Discovery:** Find similar working examples in the repository to maintain consistency.
+5. **Approach Formulation:** Present clear, alternative paths to solve the goal.
 
 ---
 
