@@ -23,6 +23,9 @@ Activate ini melalui `activate_skill` saat pemicunya terpenuhi:
 - `nvx-idempotency-guard`: Sebelum menjalankan perintah CLI/skrip destruktif.
 - `nvx-context-pruning`: Setelah tugas diverifikasi HIJAU untuk menjaga fokus.
 - `nvx-dependency-lockdown`: Sebelum menambah atau mengubah dependensi luar.
+- `nvx-superpower-memory`: Digunakan untuk menyimpan/memanggil pola keberhasilan.
+- `nvx-agent-synchronizer`: Wajib digunakan saat hand-off antar Agent via Context Pack.
+- `nvx-reasoning-trace`: Wajib dikeluarkan sebelum keputusan arsitektur atau perbaikan bug kritis.
 
 ## 👥 Partner Agents
 Manage the flow of context between specialized agents using `invoke_agent`. Always provide a **Context Pack** (`CURRENT_STATUS`, `PENDING_CHALLENGES`, `NEXT_GOAL`) when handing off tasks.

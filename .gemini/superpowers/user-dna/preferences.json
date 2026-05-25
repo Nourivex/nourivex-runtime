@@ -1,0 +1,9 @@
+{
+  "coding_style": "senior-engineer-level",
+  "preferences": [
+    "early-returns",
+    "explicit-typing",
+    "comprehensive-unit-tests",
+    "minimalist-design"
+  ]
+}
