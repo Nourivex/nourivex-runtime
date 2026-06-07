@@ -4,18 +4,27 @@
   "description": "Nourivex Engineering Runtime - Provider-agnostic AI engineering framework with 16 discipline skills and 5 specialized agents",
   "type": "module",
   "main": "opencode-plugin.mjs",
+  "bin": {
+    "nourivex": "cli/dist/index.js"
+  },
   "exports": {
     ".": "./opencode-plugin.mjs"
   },
   "files": [
     "opencode-plugin.mjs",
+    "skill.json",
     "skills/",
     "agents/",
     "adapters/",
     ".opencode/",
     ".agents/",
+    "cli/dist/",
     "README.md"
   ],
+  "scripts": {
+    "build:cli": "cd cli && npm run build",
+    "dev:cli": "cd cli && npm run dev"
+  },
   "keywords": [
     "opencode",
     "plugin",
@@ -23,7 +32,10 @@
     "ai",
     "engineering",
     "tdd",
-    "nourivex"
+    "nourivex",
+    "skills",
+    "agents",
+    "cli"
   ],
   "author": "Nourivex",
   "license": "MIT",

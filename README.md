@@ -1,30 +1,66 @@
 # Nourivex Runtime
 
-**Nourivex Runtime** is a provider-agnostic AI engineering framework. It enforces a strict **Research -> Architecture -> Planning -> TDD Execution** workflow with 16 discipline skills and 5 specialized agents. Supports **Gemini CLI**, **OpenCode**, **Claude**, and **Codex**.
+**Nourivex Runtime** is a provider-agnostic AI engineering framework. It enforces a strict **Research → Architecture → Planning → TDD Execution** workflow with 16 discipline skills and 5 specialized agents. Supports **OpenCode**, **Gemini CLI**, **Claude**, and **Codex**.
 
 ## 🚀 Key Features
 
-*   **Engineering Discipline:** 16 built-in skills for TDD, Goal Preservation, Scope Watchdog, Anti-Overengineering, and more.
-*   **Collaborative Team:** 5 specialized agents (Researcher, Architect, Planner, Implementer, Reviewer) that work as partners.
-*   **Multi-Platform:** Works with Gemini CLI, OpenCode, Claude, and Codex via platform adapters.
-*   **Auto-Discovery:** OpenCode auto-discovers skills from `.agents/skills/` and agents from `.opencode/agents/`.
+- **Engineering Discipline:** 16 built-in skills for TDD, Goal Preservation, Scope Watchdog, Anti-Overengineering, and more.
+- **Collaborative Team:** 5 specialized agents (Researcher, Architect, Planner, Implementer, Reviewer) that work as partners.
+- **Multi-Platform:** Works with OpenCode, Gemini CLI, Claude, and Codex via platform adapters.
+- **Auto-Discovery:** OpenCode auto-discovers skills from `.agents/skills/` and agents from `.opencode/agents/`.
+- **npm Installable:** Can be installed via npm and used as a plugin/MCP.
 
 ---
 
 ## 🛠️ Installation
 
-### Option A: OpenCode — Auto-Install (Recommended)
-
-From the nourivex-runtime directory, run:
+### Option A: CLI (Recommended)
 
 ```bash
-# Add as OpenCode plugin
+# Install CLI globally
+npm install -g nourivex-runtime
+
+# Go to your project
+cd /path/to/your/project
+
+# Install for your AI assistant
+nourivex init --ai opencode      # OpenCode
+nourivex init --ai claude        # Claude Code
+nourivex init --ai gemini        # Gemini CLI
+nourivex init --ai codex         # Codex CLI
+nourivex init --ai cursor        # Cursor
+nourivex init --ai windsurf      # Windsurf
+nourivex init --ai copilot       # GitHub Copilot
+nourivex init --ai continue      # Continue
+nourivex init --ai all           # All assistants
+```
+
+### Option B: npm Install (Manual)
+
+```bash
+# Install globally
+npm install -g nourivex-runtime
+
+# Or install in your project
+npm install nourivex-runtime
+```
+
+Then add to your `opencode.json`:
+
+```json
+{
+  "plugin": ["nourivex-runtime"]
+}
+```
+
+### Option C: Local Plugin
+
+```bash
+# From the nourivex-runtime directory
 opencode plugin add ./opencode-plugin.mjs
 ```
 
-Skills are auto-discovered from `.agents/skills/`. No additional config needed for basic usage.
-
-### Option B: OpenCode — Manual via opencode.json
+### Option D: Manual via opencode.json
 
 Add to your project's `opencode.json`:
 
@@ -34,11 +70,11 @@ Add to your project's `opencode.json`:
 }
 ```
 
-### Option C: OpenCode — Register Custom Subagents (Advanced)
+### Option E: Register Custom Subagents (Advanced)
 
 To use agents via `task(subagent_type="nvx-researcher", ...)`, merge the contents of `opencode.agents.json` into your project's `opencode.json` under the `"agent"` field.
 
-### Option D: Gemini CLI
+### Option F: Gemini CLI
 
 ```bash
 gemini extensions install <path-to-nourivex-runtime> --consent
@@ -109,6 +145,10 @@ nourivex-runtime/
 ├── .agents/skills/              # OpenCode skill definitions (16 skills)
 ├── .opencode/
 │   ├── agents/                  # Agent instruction files (5 agents)
+│   ├── skills/                  # OpenCode skill entry point
+│   │   └── nourivex-runtime/
+│   │       ├── SKILL.md         # Main skill file
+│   │       └── references/      # Detailed guides
 │   └── README.md                # OpenCode integration guide
 ├── adapters/
 │   ├── opencode/AGENTS.md       # OpenCode handbook
@@ -119,16 +159,18 @@ nourivex-runtime/
 ├── skills/                      # Skill source files
 ├── opencode-plugin.mjs          # OpenCode plugin entry
 ├── opencode.agents.json         # Agent config for opencode.json
+├── skill.json                   # Skill metadata for discovery
+├── package.json                 # npm package config
 ├── nourivex-runtime.skill       # Gemini CLI extension
 └── gemini-extension.json        # Gemini extension manifest
 ```
 
 ## 📜 Principles
 
-1.  **Evidence before Implementation:** No code without a plan.
-2.  **Test-First:** Failing tests are mandatory before production code.
-3.  **Simplicity Wins:** Abstractions must be earned, not assumed.
-4.  **Full Traceability:** Every change must trace back to an approved plan.
+1. **Evidence before Implementation:** No code without a plan.
+2. **Test-First:** Failing tests are mandatory before production code.
+3. **Simplicity Wins:** Abstractions must be earned, not assumed.
+4. **Full Traceability:** Every change must trace back to an approved plan.
 
 ---
 

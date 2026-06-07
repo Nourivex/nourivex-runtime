@@ -1,0 +1,35 @@
+{
+  "name": "nourivex-cli",
+  "version": "1.0.0",
+  "description": "CLI installer for Nourivex Runtime - Install engineering discipline skills for your AI assistant",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "nourivex": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "nourivex",
+    "cli",
+    "opencode",
+    "claude",
+    "gemini",
+    "engineering",
+    "tdd"
+  ],
+  "author": "Nourivex",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.0",
+    "@types/fs-extra": "^11.0.4"
+  }
+}
