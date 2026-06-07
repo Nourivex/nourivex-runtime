@@ -1,0 +1,38 @@
+{
+  "name": "nourivex-runtime",
+  "version": "1.2.0",
+  "description": "Nourivex Engineering Runtime - Provider-agnostic AI engineering framework with 16 discipline skills and 5 specialized agents",
+  "type": "module",
+  "main": "opencode-plugin.mjs",
+  "exports": {
+    ".": "./opencode-plugin.mjs"
+  },
+  "files": [
+    "opencode-plugin.mjs",
+    "skills/",
+    "agents/",
+    "adapters/",
+    ".opencode/",
+    ".agents/",
+    "README.md"
+  ],
+  "keywords": [
+    "opencode",
+    "plugin",
+    "mcp",
+    "ai",
+    "engineering",
+    "tdd",
+    "nourivex"
+  ],
+  "author": "Nourivex",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nourivex/nourivex-runtime.git",
+    "directory": "nourivex-runtime"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
