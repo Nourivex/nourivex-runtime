@@ -1,0 +1,11 @@
+# Temp/build artifacts
+temp_skill/
+_skill_*/
+_skill_extracted/
+_skill_check/
+__pycache__/
+*.pyc
+
+# OS files
+Thumbs.db
+.DS_Store

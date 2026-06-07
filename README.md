@@ -1,28 +1,127 @@
 # Nourivex Runtime
 
-**Nourivex Runtime** is a collaborative AI engineering framework for Gemini CLI. It enforces a strict **Research -> Architecture -> Planning -> Execution** workflow to ensure high-quality, test-driven software development.
+**Nourivex Runtime** is a provider-agnostic AI engineering framework. It enforces a strict **Research -> Architecture -> Planning -> TDD Execution** workflow with 16 discipline skills and 5 specialized agents. Supports **Gemini CLI**, **OpenCode**, **Claude**, and **Codex**.
 
 ## 🚀 Key Features
 
-*   **Engineering Discipline:** Built-in skills for TDD, Goal Preservation, and Anti-Overengineering.
-*   **Collaborative Team:** A suite of specialized agents (Researcher, Architect, Planner, Implementer, Reviewer) that work as partners.
-*   **Auto-Detection:** Automatically injects engineering mandates into your AI context.
+*   **Engineering Discipline:** 16 built-in skills for TDD, Goal Preservation, Scope Watchdog, Anti-Overengineering, and more.
+*   **Collaborative Team:** 5 specialized agents (Researcher, Architect, Planner, Implementer, Reviewer) that work as partners.
+*   **Multi-Platform:** Works with Gemini CLI, OpenCode, Claude, and Codex via platform adapters.
+*   **Auto-Discovery:** OpenCode auto-discovers skills from `.agents/skills/` and agents from `.opencode/agents/`.
+
+---
 
 ## 🛠️ Installation
 
-To install Nourivex Runtime in your local Gemini CLI environment:
+### Option A: OpenCode — Auto-Install (Recommended)
+
+From the nourivex-runtime directory, run:
+
+```bash
+# Add as OpenCode plugin
+opencode plugin add ./opencode-plugin.mjs
+```
+
+Skills are auto-discovered from `.agents/skills/`. No additional config needed for basic usage.
+
+### Option B: OpenCode — Manual via opencode.json
+
+Add to your project's `opencode.json`:
+
+```json
+{
+  "plugin": ["path/to/nourivex-runtime/opencode-plugin.mjs"]
+}
+```
+
+### Option C: OpenCode — Register Custom Subagents (Advanced)
+
+To use agents via `task(subagent_type="nvx-researcher", ...)`, merge the contents of `opencode.agents.json` into your project's `opencode.json` under the `"agent"` field.
+
+### Option D: Gemini CLI
 
 ```bash
 gemini extensions install <path-to-nourivex-runtime> --consent
 ```
 
+---
+
+## 🎯 OpenCode Quick Start
+
+```typescript
+// 1. Load the framework
+skill(name="nourivex-runtime")
+
+// 2. Load discipline skills
+skill(name="nvx-goal-preservation")   // Lock objective
+skill(name="nvx-watchdog")            // Patrol scope drift
+skill(name="nvx-tdd-enforcer")        // Enforce test-first
+
+// 3. Delegate to specialized agents
+task(category="deep", load_skills=["nvx-researcher"], run_in_background=true, prompt="Research...")
+task(category="deep", load_skills=["nvx-architect"], run_in_background=false, prompt="Design...")
+task(category="deep", load_skills=["nvx-planner"], run_in_background=false, prompt="Plan...")
+task(category="deep", load_skills=["nvx-implementer", "nvx-tdd-enforcer"], run_in_background=false, prompt="Implement...")
+task(subagent_type="oracle", load_skills=["nvx-reviewer"], run_in_background=false, prompt="Review...")
+```
+
+See `adapters/opencode/AGENTS.md` for the full OpenCode handbook.
+
+---
+
 ## 👥 The Dream Team
 
-*   🕵️‍♂️ **nvx-researcher:** Deep technical discovery and approach proposals.
-*   📐 **nvx-architect:** System design and structural blueprints.
-*   📝 **nvx-planner:** Task breakdown and TDD roadmap creation.
-*   💻 **nvx-implementer:** Code execution with strict TDD discipline.
-*   🧐 **nvx-reviewer:** Critical logic and edge-case verification.
+| Agent | Role | Phase |
+|-------|------|-------|
+| 🕵️ **nvx-researcher** | Deep technical discovery & approach proposals | Phase 1: Research |
+| 📐 **nvx-architect** | System design & structural blueprints | Phase 2: Architecture |
+| 📝 **nvx-planner** | Task breakdown & TDD roadmap creation | Phase 3: Planning |
+| 💻 **nvx-implementer** | TDD code execution with strict discipline | Phase 4: Execution |
+| 🧐 **nvx-reviewer** | Critical logic & edge-case verification | Phase 5: Review |
+
+## 📦 Available Skills (16)
+
+All skills are registered in `.agents/skills/` for OpenCode auto-discovery.
+
+| Skill | Description |
+|-------|-------------|
+| `nvx-goal-preservation` | Lock objective at task start |
+| `nvx-watchdog` | Patrol for scope drift during implementation |
+| `nvx-tdd-enforcer` | Test-first discipline enforcement |
+| `nvx-anti-overengineering` | Enforce simplicity & YAGNI |
+| `nvx-architectural-consistency` | Match naming/pattern conventions |
+| `nvx-verification` | Verify before completion claims |
+| `nvx-reviewer` | Adversarial code review |
+| `nvx-idempotency-guard` | Ensure idempotent operations |
+| `nvx-context-pruning` | Keep context window lean |
+| `nvx-dependency-lockdown` | Control dependency additions |
+| `nvx-superpower-memory` | Long-term pattern storage |
+| `nvx-agent-synchronizer` | State handoff between agents |
+| `nvx-reasoning-trace` | Reasoning transparency |
+| `nvx-systematic-debugging` | Structured debugging protocol |
+| `nvx-token-efficiency` | Token optimization |
+| `nvx-planner` | Multi-step planning protocol |
+
+## 📁 Project Structure
+
+```
+nourivex-runtime/
+├── .agents/skills/              # OpenCode skill definitions (16 skills)
+├── .opencode/
+│   ├── agents/                  # Agent instruction files (5 agents)
+│   └── README.md                # OpenCode integration guide
+├── adapters/
+│   ├── opencode/AGENTS.md       # OpenCode handbook
+│   ├── gemini/GEMINI.md         # Gemini CLI handbook
+│   ├── claude/CLAUDE.md         # Claude adapter
+│   └── codex/AGENTS.md          # Codex adapter
+├── agents/                      # Agent role definitions
+├── skills/                      # Skill source files
+├── opencode-plugin.mjs          # OpenCode plugin entry
+├── opencode.agents.json         # Agent config for opencode.json
+├── nourivex-runtime.skill       # Gemini CLI extension
+└── gemini-extension.json        # Gemini extension manifest
+```
 
 ## 📜 Principles
 
@@ -32,4 +131,5 @@ gemini extensions install <path-to-nourivex-runtime> --consent
 4.  **Full Traceability:** Every change must trace back to an approved plan.
 
 ---
-*Maintained by Nourivex*
+
+*Maintained by Nourivex — No code without a plan. No plan without verification. No verification without evidence.*

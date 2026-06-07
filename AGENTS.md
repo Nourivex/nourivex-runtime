@@ -1,16 +1,40 @@
-# Nourivex Agents: Bootstrap (v2.2.0)
+# Nourivex Agents: Bootstrap (v3.2.0)
 
 ## 🤝 Team Handoff Entry Point
 This repository uses specialized agents and discipline adapters.
 
 ### 1. Load Your Contract
 Identify your platform and load the corresponding handbook:
-- **OpenCode:** `adapters/opencode/AGENTS.md`
+- **OpenCode:** `adapters/opencode/AGENTS.md` (see also `.opencode/` directory)
 - **Codex:** `adapters/codex/AGENTS.md`
 - **Gemini:** `adapters/gemini/GEMINI.md`
 - **Claude:** `adapters/claude/CLAUDE.md`
 
-### 2. Mandatory Discipline
+### 2. OpenCode Quick Start
+If using **OpenCode**, the Nourivex Runtime is available as:
+
+**Skills** (auto-discovered from `.agents/skills/`):
+```typescript
+skill(name="nourivex-runtime")     // Load full framework
+skill(name="nvx-watchdog")         // Scope drift patrol
+skill(name="nvx-goal-preservation") // Lock objective
+skill(name="nvx-tdd-enforcer")     // TDD discipline
+// See .agents/skills/ for all 16 skills
+```
+
+**Sub-agent delegation** (via load_skills):
+```typescript
+task(category="deep", load_skills=["nvx-researcher"], run_in_background=true, prompt="Research...")
+task(category="deep", load_skills=["nvx-architect"], run_in_background=false, prompt="Design...")
+task(category="deep", load_skills=["nvx-planner"], run_in_background=false, prompt="Plan...")
+task(category="deep", load_skills=["nvx-implementer", "nvx-tdd-enforcer"], run_in_background=false, prompt="Implement...")
+task(subagent_type="oracle", load_skills=["nvx-reviewer"], run_in_background=false, prompt="Review...")
+```
+
+**Custom subagent registration** (advanced):
+Merge `opencode.agents.json` into your project's `opencode.json` to use `task(subagent_type="nvx-researcher", ...)` directly.
+
+### 3. Mandatory Discipline
 Every agent in this repository MUST operate under the **Nourivex Engineering Standard**. 
 - Always Research before Architecture.
 - Always Architecture before Planning.
@@ -19,3 +43,4 @@ Every agent in this repository MUST operate under the **Nourivex Engineering Sta
 
 ---
 *Refer to the /agents directory for specific role instructions.*
+*OpenCode users: see adapters/opencode/AGENTS.md and .opencode/ for the full reference.*
