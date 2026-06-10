@@ -1,7 +1,7 @@
 {
   "name": "nourivex-runtime",
-  "version": "1.2.3",
-  "description": "Nourivex Engineering Runtime - Provider-agnostic AI engineering framework with 16 discipline skills and 5 specialized agents",
+  "version": "4.0.0",
+  "description": "Nourivex Engineering Runtime - Provider-agnostic AI engineering framework with 17 discipline skills, 5 specialized agents, and persistent memory/goal/todo system",
   "type": "module",
   "main": "opencode-plugin.mjs",
   "bin": {
@@ -22,13 +22,17 @@
     "README.md"
   ],
   "dependencies": {
+    "chalk": "^5.3.0",
     "commander": "^11.1.0",
-    "fs-extra": "^11.2.0",
-    "chalk": "^5.3.0"
+    "fs-extra": "^11.2.0"
   },
   "scripts": {
     "build:cli": "cd cli && npm run build",
-    "dev:cli": "cd cli && npm run dev"
+    "dev:cli": "cd cli && npm run dev",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "keywords": [
     "opencode",
@@ -51,5 +55,10 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.8",
+    "tsx": "^4.22.4",
+    "vitest": "^4.1.8"
   }
 }

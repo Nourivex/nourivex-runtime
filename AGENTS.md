@@ -1,7 +1,14 @@
-# Nourivex Agents: Bootstrap (v3.2.0)
+# Nourivex Agents: Bootstrap (v4.0.0)
 
 ## 🤝 Team Handoff Entry Point
-This repository uses specialized agents and discipline adapters.
+This repository uses specialized agents and discipline adapters, backed by a **persistent memory system**.
+
+### 0. Session Start (NEW — v4.0.0)
+**ALWAYS** restore session context before any task:
+```typescript
+skill(name="nvx-session-manager")  // Restore goals, todos, memory
+```
+Or for Gemini/Claude: read `.nourivex/` persistent state and present SESSION BRIEF.
 
 ### 1. Load Your Contract
 Identify your platform and load the corresponding handbook:
@@ -15,11 +22,13 @@ If using **OpenCode**, the Nourivex Runtime is available as:
 
 **Skills** (auto-discovered from `.agents/skills/`):
 ```typescript
-skill(name="nourivex-runtime")     // Load full framework
-skill(name="nvx-watchdog")         // Scope drift patrol
-skill(name="nvx-goal-preservation") // Lock objective
-skill(name="nvx-tdd-enforcer")     // TDD discipline
-// See .agents/skills/ for all 16 skills
+skill(name="nvx-session-manager")    // FIRST — restore session context
+skill(name="nourivex-runtime")       // Load full framework
+skill(name="nvx-watchdog")           // Scope drift patrol
+skill(name="nvx-goal-preservation")  // Lock objective + persist
+skill(name="nvx-superpower-memory")  // RECALL/STORE patterns
+skill(name="nvx-tdd-enforcer")       // TDD discipline
+// See .agents/skills/ for all 17 skills
 ```
 
 **Sub-agent delegation** (via load_skills):
@@ -36,10 +45,12 @@ Merge `opencode.agents.json` into your project's `opencode.json` to use `task(su
 
 ### 3. Mandatory Discipline
 Every agent in this repository MUST operate under the **Nourivex Engineering Standard**. 
+- Always restore session context before starting (nvx-session-manager).
 - Always Research before Architecture.
 - Always Architecture before Planning.
 - Always Planning before TDD Execution.
 - Always use `nvx-watchdog` to patrol your work.
+- Always STORE to memory after GREEN states.
 
 ---
 *Refer to the /agents directory for specific role instructions.*

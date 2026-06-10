@@ -1,6 +1,6 @@
 ---
 name: nvx-reviewer
-description: Use after completing any implementation — perform a structured self-review to catch logic issues, edge cases, bad abstractions, duplicated logic, and scope violations before declaring completion
+description: Use after completing any implementation — perform a structured 7-pass self-review to catch logic issues, edge cases, bad abstractions, scope violations, and capture reusable patterns into persistent memory before declaring completion.
 ---
 
 # Reviewer
@@ -11,6 +11,8 @@ Shipping unreviewed code is shipping unchecked assumptions. A self-review after 
 
 **Core principle:** No completion without a structured self-review. Evidence, not confidence.
 
+**Pass 7 (new):** Every completed task is evaluated for knowledge worth persisting to memory.
+
 ---
 
 ## The Iron Law
@@ -18,6 +20,7 @@ Shipping unreviewed code is shipping unchecked assumptions. A self-review after 
 ```
 NO COMPLETION CLAIM WITHOUT A COMPLETED SELF-REVIEW.
 REVIEW IS NOT OPTIONAL. IT IS THE FINAL GATE.
+EVERY GREEN STATE MUST EVALUATED FOR MEMORY STORAGE.
 ```
 
 ---
@@ -127,6 +130,42 @@ CONSISTENCY CHECK (against nvx-architectural-consistency):
 
 ---
 
+### Pass 7: Memory Capture (NEW)
+
+After all prior passes are clean, run the Memory Store Decision Gate:
+
+```
+MEMORY CAPTURE GATE:
+□ Is there a reusable implementation pattern in this task?       [yes/no]
+□ Was there a non-obvious bug with a root cause worth recording? [yes/no]
+□ Did we discover a library constraint or limitation?            [yes/no]
+□ Did the user express or approve a specific pattern preference? [yes/no]
+
+If any YES → store to .nourivex/memory/ via nvx-superpower-memory STORE protocol.
+If all NO  → no memory capture needed for this task.
+```
+
+**When storing, be specific and actionable:**
+
+```
+MEMORY STORE: pattern
+Title: "Express async route wrapper for unified error handling"
+Content: "Wrap all Express route handlers with asyncHandler() to catch thrown
+          errors and pass them to Express error middleware — avoids try/catch
+          in every route. Works because Express 5 natively handles promise rejection."
+Code: "const asyncHandler = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)"
+Tags: ["express", "error-handling", "pattern", "async"]
+```
+
+**Confirm storage or skip:**
+```
+[MEMORY CAPTURED] ✅ Pattern stored: "Express async route wrapper"
+  OR
+[MEMORY SKIP] No reusable knowledge identified in this task.
+```
+
+---
+
 ## Review Output Format
 
 After completing all passes, produce:
@@ -152,6 +191,9 @@ Pass 5 — Scope: [PASS / ISSUES FOUND]
 Pass 6 — Consistency: [PASS / ISSUES FOUND]
   Violations: [list or "none"]
 
+Pass 7 — Memory Capture: [STORED {N} entries / SKIPPED]
+  Stored: [titles or "none"]
+
 OVERALL: [APPROVED FOR COMPLETION / REQUIRES FIXES]
 Fixes required before completion: [list or "none"]
 ```
@@ -174,6 +216,7 @@ Fixes required before completion: [list or "none"]
 - "It's a small change" (small changes have edge cases too)
 - Completing a task without the self-review report
 - Committing before review is complete
+- Skipping Pass 7 without explicitly running the Memory Capture Gate
 
 ---
 
@@ -183,6 +226,7 @@ Review does NOT replace:
 - `nvx-verification` — still run commands and read output
 - `nvx-tdd-enforcer` — tests must exist before review begins
 - `nvx-goal-preservation` — scope is verified in Pass 5, not instead of it
+- `nvx-superpower-memory` — Pass 7 triggers STORE protocol, not replaces it
 
 Review IS the final check before `verification-before-completion` runs.
 
@@ -192,4 +236,4 @@ Review IS the final check before `verification-before-completion` runs.
 
 Code that passes review is code you understand. Code you understand is code you can defend.
 
-Read your own code. Find the problems before your users do.
+Pass 7 ensures that every hard-won insight lives beyond this session. Read your own code. Find the problems before your users do. Store the patterns so you never solve the same problem twice.

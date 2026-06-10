@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "",
+  "codingStyle": {
+    "paradigm": "functional-first",
+    "patterns": ["early-returns", "explicit-typing", "comprehensive-unit-tests", "minimalist-design"],
+    "avoid": []
+  },
+  "toolingPreferences": {
+    "testRunner": "vitest",
+    "packageManager": "npm"
+  },
+  "communicationStyle": {
+    "responseLength": "concise",
+    "codeComments": "necessary-only",
+    "language": "id"
+  },
+  "customRules": [],
+  "_migratedFrom": ".gemini/superpowers/user-dna/preferences.json"
+}

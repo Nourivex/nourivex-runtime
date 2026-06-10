@@ -1,6 +1,6 @@
 ---
 name: nvx-watchdog
-description: Use aggressively throughout implementation to detect requirement drift, hallucinated features, and unrelated implementation creeping into the codebase — more aggressive than goal-preservation
+description: Use aggressively throughout implementation to detect requirement drift, hallucinated features, and unrelated implementation — more aggressive than goal-preservation. Logs all alerts to persistent goal file for cross-session audit trail.
 ---
 
 # Scope Watchdog
@@ -11,6 +11,8 @@ Scope Watchdog is the aggressive enforcement arm of goal-preservation. Where goa
 
 **Core principle:** If it wasn't in the plan, it doesn't go in the code. Zero tolerance.
 
+**Every alert is logged to `.nourivex/goals/_active.json` for audit trail.**
+
 **This skill is intentionally aggressive. False positives (raising alarm on legitimate work) are acceptable. False negatives (missing scope drift) are not.**
 
 ---
@@ -19,9 +21,39 @@ Scope Watchdog is the aggressive enforcement arm of goal-preservation. Where goa
 
 ```
 ANYTHING NOT EXPLICITLY IN THE APPROVED PLAN IS UNAUTHORIZED UNTIL APPROVED.
+ALL ALERTS ARE PERSISTED. THE AUDIT TRAIL IS PERMANENT.
 ```
 
 The burden of proof is on the addition, not the alarm.
+
+---
+
+## Session Start Patrol
+
+At the beginning of every session, before any implementation:
+
+```
+[WATCHDOG BOOT] 🐕 Scope Watchdog is active.
+
+Reading .nourivex/goals/_active.json...
+
+CASE A — Active goal found:
+  🎯 Active Goal: {title}
+  📜 Objective: {objective}
+  ⚠️ Previous Scope Alarms: {N} alerts on record
+  
+  [WATCHDOG LOCKED] Patrolling against: {objective}
+  
+  Last 3 alerts (if any):
+  - [{timestamp}] {driftType}: {description} → {resolution}
+  
+  Continuing patrol...
+
+CASE B — No active goal:
+  ⚠️ No active goal found in .nourivex/goals/_active.json
+  Recommend running nvx-goal-preservation first.
+  Proceeding without goal lock — Watchdog in permissive mode.
+```
 
 ---
 
@@ -55,9 +87,11 @@ The Watchdog activates (halts and raises alarm) when ANY of the following is det
 
 ---
 
-## Watchdog Alert Format
+## Watchdog Alert Format + Persistence
 
-When scope drift is detected, halt immediately and issue:
+When scope drift is detected, halt immediately and:
+
+**1. Issue the alert:**
 
 ```
 🚨 SCOPE WATCHDOG ALERT 🚨
@@ -78,6 +112,28 @@ Is this addition covered by the approved plan?
     B) Escalate → pause, get explicit user approval, update plan
 ```
 
+**2. Log to persistent goal file (always, regardless of resolution):**
+
+Append to `scopeAlarms[]` in `.nourivex/goals/_active.json`:
+
+```json
+{
+  "timestamp": "2026-06-10T01:30:00Z",
+  "driftType": "Feature Creep",
+  "description": "Was about to add WebSocket support to the REST API handler",
+  "where": "src/routes/todos.ts:45",
+  "planReference": "Task 3: Implement GET /todos",
+  "resolution": "skipped",
+  "notes": "User confirmed: REST only, no WebSocket needed"
+}
+```
+
+**3. Confirm logging:**
+```
+[WATCHDOG LOGGED] 🐕 Alert recorded in .nourivex/goals/_active.json
+scopeAlarms: {N} total alerts on record
+```
+
 Do NOT proceed past a Watchdog Alert without resolution.
 
 ---
@@ -95,6 +151,25 @@ Run a Watchdog check at each of these points:
 | Before adding error handling | Was this error case in scope? |
 | After writing a function | Does this function do ONLY what the plan said? |
 | Before each commit | Do the staged changes contain ONLY planned work? |
+
+---
+
+## Domain Rules Check
+
+Before every implementation cycle, check `.nourivex/memory/project-map/domain-rules.json` (if it exists):
+
+```
+[DOMAIN RULES CHECK] 📋
+Loading .nourivex/memory/project-map/domain-rules.json...
+
+Active rules:
+- rule-001 [CRITICAL]: Never expose raw DB errors to client
+- rule-002 [HIGH]: All timestamps must be UTC ISO 8601
+
+Current implementation... ✅ complies with all domain rules.
+```
+
+If a domain rule would be violated → **immediate SCOPE ALARM**, severity: CRITICAL.
 
 ---
 
@@ -118,14 +193,14 @@ Not all deviations from the plan are drift. Some are legitimate discoveries:
 
 ---
 
-## Automated Hook Guidelines (Verification Before Claims)
+## Automated Hook Guidelines
 
 Before claiming any task is complete or switching to a new context, the Watchdog MUST enforce an automated verification hook.
 
-**Protocol:** You must execute (or instruct the execution of) strict CLI commands to verify system state programmatically:
-1. Run `git status --porcelain` or `git diff --name-only`.
-2. Compare the output strictly against the approved FILE MAP.
-3. If any file outside the FILE MAP is modified, HALT immediately and raise a Watchdog Alert. No assumptions allowed.
+**Protocol:** Execute strict CLI commands to verify system state:
+1. Run `git status --porcelain` or `git diff --name-only`
+2. Compare the output strictly against the approved FILE MAP
+3. If any file outside the FILE MAP is modified → HALT immediately, raise Watchdog Alert, log it
 
 ## Commit Scope Verification
 
@@ -133,13 +208,13 @@ Before every commit, run:
 
 ```
 COMMIT SCOPE VERIFICATION:
-1. Run: git diff --stat (or equivalent)
+1. Run: git diff --stat
 2. For every changed file: is it in the plan's file map?
 3. For every added function: is it covered by an approved test?
 4. For every new dependency: was it planned?
 
-PASS: All changes trace to the approved plan
-FAIL: Watchdog alert — identify and remove/escalate unplanned changes
+PASS: All changes trace to the approved plan → proceed to commit
+FAIL: Watchdog alert — identify, log, then remove/escalate unplanned changes
 ```
 
 ---
@@ -151,8 +226,8 @@ When a Watchdog alert is raised and the addition might be genuinely valuable:
 1. **STOP all implementation** — do not mix approved and unapproved work
 2. **Document the proposed addition** with exact description and justification
 3. **Present to user** for explicit approval
-4. **If approved:** Update the plan, update the objective lock, then implement
-5. **If not approved:** Remove the addition entirely
+4. **If approved:** Update plan, update objective lock in `_active.json`, then implement
+5. **If not approved:** Remove the addition, log resolution as "rejected"
 
 There is no "implement now, ask forgiveness later."
 
@@ -162,12 +237,13 @@ There is no "implement now, ask forgiveness later."
 
 | Skill | Role |
 |-------|------|
-| `nvx-goal-preservation` | Locks the objective at task start |
-| `nvx-watchdog` | Enforces the lock aggressively during implementation |
-| `nvx-reviewer` | Reviews for scope in Pass 5 after implementation |
-| `nvx-planner` | Defines the approved scope in the plan |
+| `nvx-goal-preservation` | Locks the objective, maintains `_active.json` |
+| `nvx-watchdog` | Enforces the lock, logs all alerts to `_active.json` |
+| `nvx-reviewer` | Reviews for scope violations in Pass 5 after implementation |
+| `nvx-planner` | Defines the approved scope, FILE MAP is the law |
+| `nvx-superpower-memory` | Domain rules in `project-map/` are additional constraints |
 
-Watchdog is the runtime enforcement of the plan. Goal-preservation is the contract; Watchdog is the auditor.
+Watchdog is the runtime enforcement of the plan. Goal-preservation is the contract; Watchdog is the auditor. Memory is the constitution.
 
 ---
 
@@ -176,8 +252,8 @@ Watchdog is the runtime enforcement of the plan. Goal-preservation is the contra
 - Any new file not in the plan's file map
 - Any function not covered by an approved failing test
 - Any "improvement" that wasn't asked for
-- "I noticed X so I fixed it"
-- "I added Y because it seemed useful"
+- "I noticed X so I fixed it" → ALERT
+- "I added Y because it seemed useful" → ALERT
 - The implementation is larger than the plan suggested
 - Adding logging/metrics/monitoring that wasn't planned
 - "Future-proofing" anything
@@ -188,4 +264,4 @@ Watchdog is the runtime enforcement of the plan. Goal-preservation is the contra
 
 You are not building what you think is best. You are building what was approved.
 
-If you think something should be added, stop and ask. The user decides. Not you.
+If you think something should be added, stop and ask. The user decides. Not you. And every alert you raise is recorded — so the discipline is auditable.

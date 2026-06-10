@@ -1,8 +1,8 @@
 {
   "name": "nourivex-runtime",
   "displayName": "Nourivex Runtime",
-  "description": "Provider-agnostic AI engineering framework with 16 discipline skills and 5 specialized agents. Enforces Research → Architecture → Planning → TDD Execution workflow.",
-  "version": "1.0.0",
+  "description": "Provider-agnostic AI engineering framework with 17 discipline skills, 5 specialized agents, and persistent memory/goal/todo system. Agents never forget your goals across sessions.",
+  "version": "4.0.0",
   "author": "Nourivex",
   "license": "MIT",
   "repository": "https://github.com/yourusername/AutonomNourivex",

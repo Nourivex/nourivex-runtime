@@ -9,3 +9,29 @@ __pycache__/
 # OS files
 Thumbs.db
 .DS_Store
+
+# .nourivex/ persistent state — these are user/project-specific runtime data
+# Scaffold files (_active.json, _index.json, profile.json) are tracked as templates
+# Runtime data files are git-ignored
+.nourivex/goals/archive/
+.nourivex/goals/_history.json
+.nourivex/memory/knowledge-vault/
+.nourivex/memory/project-map/domain-rules.json
+.nourivex/memory/project-map/architecture.json
+.nourivex/todos/lists/
+.nourivex/todos/_completed.json
+.nourivex/sessions/
+
+# Node dependencies and build artifacts
+node_modules/
+coverage/
+
+# AI Assistant configs (created by tests/init)
+.claude/
+.codex/
+.continue/
+.cursor/
+.gemini/
+.github/
+.windsurf/
+opencode.json
