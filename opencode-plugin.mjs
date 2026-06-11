@@ -29,8 +29,8 @@ export default async function nourivexRuntimePlugin(input, options) {
   }
 
   try {
-    // Load skills from .opencode/skills/ directory
-    const skillsDir = path.join(__dirname, '.opencode', 'skills');
+    // Load skills from .agents/skills/ directory
+    const skillsDir = path.join(__dirname, '.agents', 'skills');
     const skillEntries = await fs.readdir(skillsDir, { withFileTypes: true });
     
     for (const entry of skillEntries) {
