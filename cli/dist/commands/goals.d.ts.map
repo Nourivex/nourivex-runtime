@@ -1,0 +1,1 @@
+{"version":3,"file":"goals.d.ts","sourceRoot":"","sources":["../../src/commands/goals.ts"],"names":[],"mappings":"AAIA,UAAU,YAAY;IACpB,IAAI,CAAC,EAAE,OAAO,CAAC;IACf,IAAI,CAAC,EAAE,MAAM,CAAC;IACd,QAAQ,CAAC,EAAE,MAAM,CAAC;IAClB,OAAO,CAAC,EAAE,OAAO,CAAC;CACnB;AAKD,wBAAsB,YAAY,CAAC,OAAO,EAAE,YAAY,iBAsBvD"}

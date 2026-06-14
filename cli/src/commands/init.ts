@@ -151,7 +151,12 @@ export async function initCommand(options: InitOptions) {
     console.log(chalk.cyan(`   skill(name="nvx-watchdog")`));
     console.log(chalk.cyan(`   skill(name="nvx-tdd-enforcer")`));
     console.log(chalk.gray(`3. Delegate to agents:`));
-    console.log(chalk.cyan(`   task(category="deep", load_skills=["nvx-researcher"], prompt="...")`));
+    console.log(chalk.cyan(`   // Research - explore codebase`));
+    console.log(chalk.cyan(`   task(subagent_type="explore", load_skills=[], run_in_background=true, prompt="Find...")`));
+    console.log(chalk.cyan(`   // Architecture - consult oracle`));
+    console.log(chalk.cyan(`   task(subagent_type="oracle", load_skills=["nvx-reviewer"], prompt="Review...")`));
+    console.log(chalk.cyan(`   // Implementation - use category`));
+    console.log(chalk.cyan(`   task(category="deep", load_skills=["nvx-tdd-enforcer"], prompt="Implement...")`));
     console.log('');
 
   } catch (error) {

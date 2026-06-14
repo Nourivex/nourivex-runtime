@@ -1,0 +1,1 @@
+{"version":3,"file":"memory.d.ts","sourceRoot":"","sources":["../../src/commands/memory.ts"],"names":[],"mappings":"AAIA,UAAU,aAAa;IACrB,IAAI,CAAC,EAAE,OAAO,CAAC;IACf,MAAM,CAAC,EAAE,MAAM,CAAC;IAChB,IAAI,CAAC,EAAE,MAAM,CAAC;IACd,KAAK,CAAC,EAAE,OAAO,CAAC;CACjB;AAoBD,wBAAsB,aAAa,CAAC,OAAO,EAAE,aAAa,iBA+BzD"}
