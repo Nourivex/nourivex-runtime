@@ -1,6 +1,6 @@
 {
   "name": "nourivex-runtime",
-  "version": "4.1.2",
+  "version": "4.1.3",
   "description": "Nourivex Engineering Runtime - Provider-agnostic AI engineering framework with 17 discipline skills, 5 specialized agents, and persistent memory/goal/todo system",
   "type": "module",
   "main": "opencode-plugin.mjs",

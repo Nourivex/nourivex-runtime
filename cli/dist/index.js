@@ -8,7 +8,7 @@ const program = new Command();
 program
     .name('nourivex')
     .description('CLI for Nourivex Runtime — Engineering discipline skills + persistent memory for AI assistants')
-    .version('4.0.0');
+    .version('4.1.2');
 program
     .command('init')
     .description('Install Nourivex Runtime for your AI assistant')
