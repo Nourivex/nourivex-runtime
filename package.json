@@ -12,6 +12,7 @@
   },
   "files": [
     "opencode-plugin.mjs",
+    "opencode.agents.json",
     "skill.json",
     "skills/",
     "agents/",

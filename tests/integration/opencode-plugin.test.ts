@@ -4,7 +4,7 @@
  * Tests cover:
  * - Plugin loading and initialization
  * - Agent registration from opencode.agents.json
- * - Skill loading from .opencode/skills/ directory
+ * - Skill loading from .agents/skills/ directory
  * - Error handling for missing files
  * - Plugin dispose/cleanup
  * - Real project integration
@@ -163,7 +163,7 @@ describe('opencode-plugin.mjs', () => {
       const readdirSpy = vi.spyOn(fs, 'readdir').mockImplementation(
         async (p: any, options?: any) => {
           const pathStr = p.toString();
-          if (pathStr.includes('.opencode/skills') || pathStr.endsWith('skills')) {
+          if (pathStr.includes('.agents/skills') || pathStr.endsWith('skills')) {
             throw new Error('ENOENT: no such directory');
           }
           return originalReaddir(p, options);
@@ -191,7 +191,7 @@ describe('opencode-plugin.mjs', () => {
       const readdirSpy = vi.spyOn(fs, 'readdir').mockImplementation(
         async (p: any, options?: any) => {
           const pathStr = p.toString();
-          if (pathStr.includes('.opencode/skills') || (pathStr.endsWith('skills') && options?.withFileTypes)) {
+          if (pathStr.includes('.agents/skills') || (pathStr.endsWith('skills') && options?.withFileTypes)) {
             return [{ name: 'empty-skill', isDirectory: () => true, isFile: () => false }] as any[];
           }
           return originalReaddir(p, options);
@@ -229,7 +229,7 @@ describe('opencode-plugin.mjs', () => {
       const readdirSpy = vi.spyOn(fs, 'readdir').mockImplementation(
         async (p: any, options?: any) => {
           const pathStr = p.toString();
-          if (pathStr.includes('.opencode/skills') || (pathStr.endsWith('skills') && options?.withFileTypes)) {
+          if (pathStr.includes('.agents/skills') || (pathStr.endsWith('skills') && options?.withFileTypes)) {
             return [{ name: 'bad-skill', isDirectory: () => true, isFile: () => false }] as any[];
           }
           return originalReaddir(p, options);
@@ -267,7 +267,7 @@ describe('opencode-plugin.mjs', () => {
       const readdirSpy = vi.spyOn(fs, 'readdir').mockImplementation(
         async (p: any, options?: any) => {
           const pathStr = p.toString();
-          if (pathStr.includes('.opencode/skills') || (pathStr.endsWith('skills') && options?.withFileTypes)) {
+          if (pathStr.includes('.agents/skills') || (pathStr.endsWith('skills') && options?.withFileTypes)) {
             return [{ name: 'test-skill', isDirectory: () => true, isFile: () => false }] as any[];
           }
           return originalReaddir(p, options);
