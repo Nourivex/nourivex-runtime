@@ -200,6 +200,7 @@ Load these skills at appropriate points during your workflow:
 | `nvx-planner` | Before multi-step implementation | Create structured roadmap |
 | `nvx-code-splitter` | When file exceeds 500 lines | Automatic file decomposition |
 | `nvx-project-checklist` | At project start/completion | Best practices verification |
+| `nvx-docx-editor` | Creating/editing Word documents | Professional .docx generation |
 
 ---
 
@@ -329,6 +330,35 @@ COMPLETION VERIFICATION:
 
 ---
 
+## 📄 Document Generation (DOCX)
+
+When the task requires generating professional Word documents (reports, letters, templates), use the `nvx-docx-editor` skill.
+
+### When to Use
+
+| Trigger | Action |
+|---------|--------|
+| User asks for "report", "memo", "letter" as .docx | Load `nvx-docx-editor` |
+| Need to create Indonesian academic report (PKL, skripsi) | Load `nvx-docx-editor` |
+| Need to edit existing .docx files | Load `nvx-docx-editor` |
+| Need tracked changes or comments in Word | Load `nvx-docx-editor` |
+
+### Delegation Pattern
+
+```typescript
+// Creating a new document
+task(category="deep", load_skills=["nvx-docx-editor", "nvx-goal-preservation"], 
+  run_in_background=false,
+  prompt="Create professional PKL report with: cover page, approval page, foreword, TOC, and chapters. Follow Indonesian academic standards from nvx-docx-editor skill.")
+
+// Editing existing document
+task(category="quick", load_skills=["nvx-docx-editor"], 
+  run_in_background=false,
+  prompt="Edit the existing report.docx: update the cover page with new title and add tracked changes for review.")
+```
+
+---
+
 ## 🚫 Hard Blocks (NEVER Violate)
 
 | Rule | Consequence |
@@ -356,6 +386,7 @@ COMPLETION VERIFICATION:
 | Adding dependency | Justify and research | `nvx-dependency-lockdown` |
 | Long workflow | Prune context | `nvx-context-pruning` |
 | Encountering bug | Systematic debugging | `nvx-systematic-debugging` |
+| Creating/editing .docx | Document generation | `nvx-docx-editor` |
 
 ---
 
