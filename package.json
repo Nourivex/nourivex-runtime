@@ -5,8 +5,7 @@
   "type": "module",
   "main": "opencode-plugin.mjs",
   "bin": {
-    "nourivex": "cli/dist/index.js",
-    "nourivex-mcp": "mcp/dist/server.js"
+    "nourivex": "cli/dist/index.js"
   },
   "exports": {
     ".": "./opencode-plugin.mjs"
@@ -20,8 +19,6 @@
     "adapters/",
     ".opencode/",
     ".agents/",
-    "mcp/dist/",
-    "mcp/package.json",
     "cli/dist/",
     "README.md"
   ],
