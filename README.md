@@ -1,6 +1,6 @@
 # Nourivex Runtime
 
-**Nourivex Runtime** is a provider-agnostic AI engineering framework. It enforces a strict **Research → Architecture → Planning → TDD Execution** workflow with **17 discipline skills**, **5 specialized agents**, and a **persistent memory system** so agents never forget your goals across sessions. Supports **OpenCode**, **Gemini CLI**, **Claude**, and **Codex**.
+**Nourivex Runtime** is a provider-agnostic AI engineering framework. It enforces a strict **Research → Architecture → Planning → TDD Execution** workflow with **17 discipline skills**, **5 specialized agents**, a **persistent memory system**, and an **MCP server with 26 executable tools** so agents never forget your goals across sessions. Supports **OpenCode**, **Gemini CLI**, **Claude**, and **Codex**.
 
 ## 🚀 Key Features
 
@@ -13,22 +13,60 @@
 - **Multi-Platform:** Works with OpenCode, Gemini CLI, Claude, and Codex via platform adapters.
 - **Auto-Discovery:** OpenCode auto-discovers skills from `.agents/skills/` and agents from `.opencode/agents/`.
 - **npm Installable:** Can be installed via npm and used as a plugin/MCP.
-- **CLI Tools:** `nourivex memory`, `nourivex goals`, `nourivex todos` for inspecting persistent state from terminal.
+- **MCP Server with 26 Tools:** Available via `npx nourivex-mcp-server` — tools for goals, memory, todos, and session management.
+- **CLI Tools:** `nourivex memory`, `nourivex goals`, `nourivex todos`, `nourivex mcp` for inspecting persistent state from terminal.
 
 ---
 
 ## 🛠️ Installation
 
-### Option A: CLI (Recommended)
+Nourivex Runtime has **two modes** that complement each other:
+
+| Mode | What It Does | How |
+|------|-------------|-----|
+| 🧩 **Plugin** | Provides 17 skills + 5 agents (agentic workflow) | `plugin: ["nourivex-runtime"]` |
+| 🔌 **MCP Server** | Exposes 26 tools via MCP protocol (tool-based) | `npx -y nourivex-mcp-server` |
+
+### Step 1: Install the Runtime
 
 ```bash
-# Install CLI globally
+# Install CLI globally (recommended)
 npm install -g nourivex-runtime
 
-# Go to your project
-cd /path/to/your/project
+# Or install in your project
+npm install nourivex-runtime
+```
 
-# Install for your AI assistant
+### Step 2: Configure
+
+#### For OpenCode users — dual config (`opencode.json`):
+
+Add both **plugin** and **MCP** entries to your `opencode.json`:
+
+```json
+{
+  "plugin": ["nourivex-runtime"],
+
+  "mcp": {
+    "nourivex": {
+      "type": "local",
+      "command": ["npx", "-y", "nourivex-mcp-server"],
+      "env": { "NOURIVEX_PROJECT_ROOT": "." },
+      "enabled": true
+    }
+  }
+}
+```
+
+> **Plugin** enables agentic workflow: `skill()`, `task()`, specialized sub-agents.
+> **MCP** enables direct tool access: 26 atomic tools for goals/memory/todos/sessions.
+> Keduanya coexist — bukan either/or.
+
+#### For CLI-only use:
+
+```bash
+# Initialize your project for a specific AI assistant
+cd /path/to/your/project
 nourivex init --ai opencode      # OpenCode
 nourivex init --ai claude        # Claude Code
 nourivex init --ai gemini        # Gemini CLI
@@ -40,46 +78,32 @@ nourivex init --ai continue      # Continue
 nourivex init --ai all           # All assistants
 ```
 
-### Option B: npm Install (Manual)
+#### Or add the MCP server only (no plugin):
 
-```bash
-# Install globally
-npm install -g nourivex-runtime
-
-# Or install in your project
-npm install nourivex-runtime
-```
-
-Then add to your `opencode.json`:
+Any MCP-compatible client can use just the server:
 
 ```json
 {
-  "plugin": ["nourivex-runtime"]
+  "mcp": {
+    "nourivex": {
+      "type": "local",
+      "command": ["npx", "-y", "nourivex-mcp-server"]
+    }
+  }
 }
 ```
 
-### Option C: Local Plugin
+#### Local Plugin (development):
 
 ```bash
-# From the nourivex-runtime directory
 opencode plugin add ./opencode-plugin.mjs
 ```
 
-### Option D: Manual via opencode.json
+#### Register Custom Subagents (Advanced):
 
-Add to your project's `opencode.json`:
+To use agents via `task(subagent_type="nvx-researcher", ...)`, merge `opencode.agents.json` into your project's `opencode.json` under the `"agent"` field.
 
-```json
-{
-  "plugin": ["path/to/nourivex-runtime/opencode-plugin.mjs"]
-}
-```
-
-### Option E: Register Custom Subagents (Advanced)
-
-To use agents via `task(subagent_type="nvx-researcher", ...)`, merge the contents of `opencode.agents.json` into your project's `opencode.json` under the `"agent"` field.
-
-### Option F: Gemini CLI
+#### Gemini CLI:
 
 ```bash
 gemini extensions install <path-to-nourivex-runtime> --consent
@@ -87,7 +111,7 @@ gemini extensions install <path-to-nourivex-runtime> --consent
 
 ---
 
-## 🎯 OpenCode Quick Start (v4.0.0)
+## 🎯 OpenCode Quick Start (v5.0.0)
 
 ```typescript
 // 0. ALWAYS FIRST — restore session context
@@ -116,7 +140,47 @@ See `adapters/opencode/AGENTS.md` for the full OpenCode handbook.
 
 ---
 
-## 🧠 CLI Commands (v4.0.0)
+## 🔌 MCP Server
+
+> **MCP** (Model Context Protocol) lets any MCP-compatible AI client call tools directly — no plugin or skill system needed.
+> Install via: `npx -y nourivex-mcp-server` (no global install required)
+
+### 26 Tools
+
+| Domain | Tool | What It Does |
+|--------|------|-------------|
+| **Goals** (7) | `goals_create` | Create a new goal with description and priority |
+| | `goals_list` | List all goals with status and progress |
+| | `goals_get` | Get a single goal by ID |
+| | `goals_update` | Update goal fields |
+| | `goals_complete` | Mark a goal as completed |
+| | `goals_archive` | Archive a completed goal |
+| | `goals_scope_alarm` | Log a scope drift alarm |
+| **Memory** (8) | `memory_create` | Create a new memory entry |
+| | `memory_list` | List all memory entries |
+| | `memory_get` | Get a single memory entry by ID |
+| | `memory_update` | Update a memory entry |
+| | `memory_delete` | Delete a memory entry |
+| | `memory_search` | Search memories by keyword |
+| | `memory_recall` | Recall patterns before planning |
+| | `memory_store_lesson` | Store a lesson learned |
+| **Sessions** (3) | `session_get` | Get session context for current session |
+| | `session_search` | Search across all sessions |
+| | `session_list` | List all sessions |
+| **Todos** (8) | `todos_create` | Create a new todo list |
+| | `todos_list` | List all todo lists |
+| | `todos_get` | Get a todo list by ID |
+| | `todos_update_item` | Update a single todo item status |
+| | `todos_batch_update` | Batch update multiple items |
+| | `todos_progress` | Get progress summary across lists |
+| | `todos_completed` | List completed todo lists |
+| | `todos_archive` | Archive a completed todo list |
+
+> These tools interact with the same `.nourivex/` persistent storage as the plugin skills — data written via MCP is visible to plugin skills and vice versa.
+
+---
+
+## 🧠 CLI Commands (v5.0.0)
 
 Inspect and manage your persistent state from the terminal:
 
@@ -135,6 +199,9 @@ nourivex goals --history          # Show all past goals
 nourivex todos                    # Show active todo list
 nourivex todos --progress         # Visual progress bar
 nourivex todos --show <id>        # Detailed view
+
+# MCP Server
+nourivex mcp                      # Spawn MCP server locally (stdio)
 ```
 
 ---
@@ -184,7 +251,7 @@ All skills are registered in `.agents/skills/` for OpenCode auto-discovery.
 
 | Skill | Description |
 |-------|-------------|
-| `nvx-session-manager` | **NEW** — Restore/save session context (goals, todos, memory) |
+| `nvx-session-manager` | Restore/save session context (goals, todos, memory) |
 | `nvx-goal-preservation` | Lock objective + persist to `.nourivex/goals/` — survives restarts |
 | `nvx-superpower-memory` | STORE patterns after GREEN, RECALL before planning |
 | `nvx-watchdog` | Scope patrol + logs all alerts to goal file |
@@ -207,37 +274,49 @@ All skills are registered in `.agents/skills/` for OpenCode auto-discovery.
 ```
 nourivex-runtime/
 ├── .agents/skills/              # 17 skill definitions (OpenCode auto-discovered)
-│   ├── nvx-session-manager/     # NEW in v4.0.0
-│   ├── nvx-superpower-memory/   # UPGRADED: actionable STORE/RECALL
-│   ├── nvx-goal-preservation/   # UPGRADED: persists to .nourivex/goals/
-│   ├── nvx-planner/             # UPGRADED: persists todo list
-│   ├── nvx-watchdog/            # UPGRADED: logs alerts to goal file
-│   ├── nvx-reviewer/            # UPGRADED: Pass 7 memory capture
-│   └── nvx-agent-synchronizer/  # UPGRADED: Context Pack v2
+│   ├── nvx-session-manager/
+│   ├── nvx-superpower-memory/
+│   ├── nvx-goal-preservation/
+│   ├── nvx-planner/
+│   ├── nvx-watchdog/
+│   ├── nvx-reviewer/
+│   └── nvx-agent-synchronizer/
 ├── .opencode/
 │   ├── agents/                  # Agent instruction files (5 agents)
 │   └── skills/                  # OpenCode skill entry point
-├── .nourivex/                   # NEW: Persistent storage (auto-created)
+├── .nourivex/                   # Persistent storage (auto-created)
 │   ├── goals/                   # Goal tracking
 │   ├── todos/                   # Todo lists
 │   ├── memory/                  # Knowledge vault
 │   └── sessions/                # Session summaries
 ├── adapters/
-│   ├── opencode/AGENTS.md       # OpenCode handbook (v4.0.0)
-│   ├── gemini/GEMINI.md         # Gemini CLI handbook (v4.0.0)
-│   ├── claude/CLAUDE.md         # Claude adapter (v4.0.0)
-│   └── codex/AGENTS.md          # Codex adapter (v4.0.0)
+│   ├── opencode/AGENTS.md       # OpenCode handbook (v5.0.0)
+│   ├── gemini/GEMINI.md         # Gemini CLI handbook (v5.0.0)
+│   ├── claude/CLAUDE.md         # Claude adapter (v5.0.0)
+│   └── codex/AGENTS.md          # Codex adapter (v5.0.0)
 ├── agents/                      # Agent role definitions
 ├── cli/src/
 │   ├── commands/
 │   │   ├── init.ts              # nourivex init
-│   │   ├── memory.ts            # NEW: nourivex memory
-│   │   ├── goals.ts             # NEW: nourivex goals
-│   │   └── todos.ts             # NEW: nourivex todos
+│   │   ├── memory.ts            # nourivex memory
+│   │   ├── goals.ts             # nourivex goals
+│   │   ├── todos.ts             # nourivex todos
+│   │   └── mcp.ts               # nourivex mcp
 │   └── index.ts                 # CLI entry point
+├── mcp/                         # MCP server source
+│   ├── src/
+│   │   ├── server.ts            # MCP entry point (26 tools)
+│   │   ├── tools/               # Tool implementations (goals, memory, session, todos)
+│   │   ├── prompts/             # MCP prompt definitions
+│   │   ├── resources/           # MCP resource definitions
+│   │   └── schemas/             # Zod schemas for all operations
+│   ├── dist/                    # Build output
+│   ├── tsconfig.json
+│   └── package.json             # nourivex-mcp-server@5.0.0 (published to npm)
 ├── opencode-plugin.mjs          # OpenCode plugin entry
-├── package.json                 # v4.0.0
-└── skill.json                   # v4.0.0
+├── opencode-mcp.json            # Project-local MCP server config
+├── package.json                 # v5.0.0
+└── skill.json                   # v5.0.0
 ```
 
 ## 📜 Principles

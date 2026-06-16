@@ -1,9 +1,9 @@
-# Nourivex Agents: Bootstrap (v4.0.0)
+# Nourivex Agents: Bootstrap (v5.0.0)
 
 ## 🤝 Team Handoff Entry Point
-This repository uses specialized agents and discipline adapters, backed by a **persistent memory system**.
+This repository uses specialized agents and discipline adapters, backed by a **persistent memory system** and an **MCP server with 26 tools**.
 
-### 0. Session Start (NEW — v4.0.0)
+### 0. Session Start
 **ALWAYS** restore session context before any task:
 ```typescript
 skill(name="nvx-session-manager")  // Restore goals, todos, memory
@@ -18,7 +18,13 @@ Identify your platform and load the corresponding handbook:
 - **Claude:** `adapters/claude/CLAUDE.md`
 
 ### 2. OpenCode Quick Start
-If using **OpenCode**, the Nourivex Runtime is available as:
+If using **OpenCode**, the Nourivex Runtime is available in **two modes**:
+
+#### A. Plugin Mode (Skills + Agents)
+Add to `opencode.json`:
+```json
+{ "plugin": ["nourivex-runtime"] }
+```
 
 **Skills** (auto-discovered from `.agents/skills/`):
 ```typescript
@@ -40,7 +46,26 @@ task(category="deep", load_skills=["nvx-implementer", "nvx-tdd-enforcer"], run_i
 task(subagent_type="oracle", load_skills=["nvx-reviewer"], run_in_background=false, prompt="Review...")
 ```
 
-**Custom subagent registration** (advanced):
+#### B. MCP Server Mode (26 Tools)
+Add to `opencode.json`:
+```json
+{
+  "mcp": {
+    "nourivex": {
+      "type": "local",
+      "command": ["npx", "-y", "nourivex-mcp-server"],
+      "env": { "NOURIVEX_PROJECT_ROOT": "." },
+      "enabled": true
+    }
+  }
+}
+```
+
+**Available MCP tools:** goals (7), memory (8), sessions (3), todos (8) — see README.md for full list.
+
+> Plugin and MCP modes coexist — the plugin handles agentic workflows, MCP provides atomic tool access to the same `.nourivex/` storage.
+
+#### Custom subagent registration (advanced):
 Merge `opencode.agents.json` into your project's `opencode.json` to use `task(subagent_type="nvx-researcher", ...)` directly.
 
 ### 3. Mandatory Discipline
