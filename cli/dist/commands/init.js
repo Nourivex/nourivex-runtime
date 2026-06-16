@@ -72,10 +72,15 @@ export async function initCommand(options) {
     }
     const skillDir = path.join(targetDir, platformConfig.skillPath);
     // Check if already installed
-    if (await fs.pathExists(skillDir) && !force) {
-        console.log(chalk.yellow(`⚠️  Nourivex Runtime already installed at: ${skillDir}`));
-        console.log(chalk.gray('Use --force to reinstall'));
-        process.exit(0);
+    if (await fs.pathExists(skillDir)) {
+        if (!force) {
+            console.log(chalk.yellow(`⚠️  Nourivex Runtime already installed at: ${skillDir}`));
+            console.log(chalk.gray('Use --force to reinstall'));
+            process.exit(0);
+        }
+        // Clean old installation so stale files don't linger
+        await fs.remove(skillDir);
+        console.log(chalk.gray(`🧹 Removed old installation`));
     }
     try {
         // Create directories
@@ -117,16 +122,14 @@ export async function initCommand(options) {
             if (!config.plugin.includes(pluginEntry)) {
                 config.plugin.push(pluginEntry);
             }
-            if (!config.mcpServers) {
-                config.mcpServers = {};
+            if (!config.mcp) {
+                config.mcp = {};
             }
-            if (!config.mcpServers.nourivex) {
-                config.mcpServers.nourivex = {
-                    command: 'node',
-                    args: ['./mcp/dist/server.js'],
-                    env: {
-                        NOURIVEX_PROJECT_ROOT: '.'
-                    }
+            if (!config.mcp.nourivex) {
+                config.mcp.nourivex = {
+                    type: 'local',
+                    command: ['npx', '-y', 'nourivex-mcp-server'],
+                    enabled: true
                 };
             }
             await fs.writeJson(configPath, config, { spaces: 2 });
