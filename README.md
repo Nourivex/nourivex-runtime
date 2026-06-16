@@ -1,6 +1,6 @@
 # Nourivex Runtime
 
-**Nourivex Runtime** is a provider-agnostic AI engineering framework. It enforces a strict **Research → Architecture → Planning → TDD Execution** workflow with **17 discipline skills**, **5 specialized agents**, a **persistent memory system**, and an **MCP server with 26 executable tools** so agents never forget your goals across sessions. Supports **OpenCode**, **Gemini CLI**, **Claude**, and **Codex**.
+**Nourivex Runtime** is a provider-agnostic AI engineering framework. It enforces a strict **Research → Architecture → Planning → TDD Execution** workflow with **17 discipline skills**, **5 specialized agents**, a **persistent memory system**, and an **MCP server with 25 executable tools** so agents never forget your goals across sessions. Supports **OpenCode**, **Gemini CLI**, **Claude**, and **Codex**.
 
 ## 🚀 Key Features
 
@@ -13,7 +13,7 @@
 - **Multi-Platform:** Works with OpenCode, Gemini CLI, Claude, and Codex via platform adapters.
 - **Auto-Discovery:** OpenCode auto-discovers skills from `.agents/skills/` and agents from `.opencode/agents/`.
 - **npm Installable:** Can be installed via npm and used as a plugin/MCP.
-- **MCP Server with 26 Tools:** Available via `npx nourivex-mcp-server` — tools for goals, memory, todos, and session management.
+- **MCP Server with 25 Tools:** Available via `npx nourivex-mcp-server` — tools for goals, memory, todos, and session management.
 - **CLI Tools:** `nourivex memory`, `nourivex goals`, `nourivex todos`, `nourivex mcp` for inspecting persistent state from terminal.
 
 ---
@@ -25,7 +25,7 @@ Nourivex Runtime has **two modes** that complement each other:
 | Mode | What It Does | How |
 |------|-------------|-----|
 | 🧩 **Plugin** | Provides 17 skills + 5 agents (agentic workflow) | `plugin: ["nourivex-runtime"]` |
-| 🔌 **MCP Server** | Exposes 26 tools via MCP protocol (tool-based) | `npx -y nourivex-mcp-server` |
+| 🔌 **MCP Server** | Exposes 25 tools via MCP protocol (tool-based) | `npx -y nourivex-mcp-server` |
 
 ### Step 1: Install the Runtime
 
@@ -51,7 +51,6 @@ Add both **plugin** and **MCP** entries to your `opencode.json`:
     "nourivex": {
       "type": "local",
       "command": ["npx", "-y", "nourivex-mcp-server"],
-      "env": { "NOURIVEX_PROJECT_ROOT": "." },
       "enabled": true
     }
   }
@@ -145,36 +144,35 @@ See `adapters/opencode/AGENTS.md` for the full OpenCode handbook.
 > **MCP** (Model Context Protocol) lets any MCP-compatible AI client call tools directly — no plugin or skill system needed.
 > Install via: `npx -y nourivex-mcp-server` (no global install required)
 
-### 26 Tools
+### 25 Tools
 
 | Domain | Tool | What It Does |
 |--------|------|-------------|
-| **Goals** (7) | `goals_create` | Create a new goal with description and priority |
-| | `goals_list` | List all goals with status and progress |
-| | `goals_get` | Get a single goal by ID |
-| | `goals_update` | Update goal fields |
-| | `goals_complete` | Mark a goal as completed |
-| | `goals_archive` | Archive a completed goal |
-| | `goals_scope_alarm` | Log a scope drift alarm |
-| **Memory** (8) | `memory_create` | Create a new memory entry |
-| | `memory_list` | List all memory entries |
-| | `memory_get` | Get a single memory entry by ID |
-| | `memory_update` | Update a memory entry |
-| | `memory_delete` | Delete a memory entry |
-| | `memory_search` | Search memories by keyword |
-| | `memory_recall` | Recall patterns before planning |
-| | `memory_store_lesson` | Store a lesson learned |
-| **Sessions** (3) | `session_get` | Get session context for current session |
-| | `session_search` | Search across all sessions |
-| | `session_list` | List all sessions |
-| **Todos** (8) | `todos_create` | Create a new todo list |
-| | `todos_list` | List all todo lists |
-| | `todos_get` | Get a todo list by ID |
-| | `todos_update_item` | Update a single todo item status |
-| | `todos_batch_update` | Batch update multiple items |
-| | `todos_progress` | Get progress summary across lists |
-| | `todos_completed` | List completed todo lists |
-| | `todos_archive` | Archive a completed todo list |
+| **Goals** (7) | `goal_get` | Read the current active goal |
+| | `goal_create` | Create a new active goal with title, objective, success criteria |
+| | `goal_update` | Update a field on the active goal |
+| | `goal_complete` | Complete and archive the active goal |
+| | `goal_abandon` | Abandon the active goal with a reason |
+| | `goal_add_scope_alarm` | Log a scope drift alarm to the active goal |
+| | `goal_history` | Read completed and abandoned goals from history |
+| **Memory** (8) | `memory_store` | Store a new memory entry (pattern, lesson, or note) |
+| | `memory_list` | List all memory entries with search and filter |
+| | `memory_get` | Get a specific memory entry by ID |
+| | `memory_recall` | Recall patterns before planning — returns relevant memories |
+| | `memory_update_user_dna` | Update user preferences and coding style profile |
+| | `memory_get_user_dna` | Get stored user preferences and coding profile |
+| | `memory_get_domain_rules` | Get stored business domain rules (invariants) |
+| | `memory_add_domain_rule` | Add a new business domain rule |
+| **Sessions** (3) | `session_init` | Initialize a new session with project context |
+| | `session_restore` | Restore session context — returns active goal, todo, and recent memory |
+| | `session_save` | Save the current session summary to persistent storage |
+| **Todos** (7) | `todo_create` | Create a new todo list from a plan |
+| | `todo_get` | Get a todo list by ID |
+| | `todo_list` | List all active todo lists |
+| | `todo_update_item` | Update a single todo item (status, description, priority) |
+| | `todo_add_item` | Add an item to an existing todo list |
+| | `todo_complete` | Mark a todo list as completed and archive it |
+| | `todo_progress` | Get aggregated progress across all todo lists |
 
 > These tools interact with the same `.nourivex/` persistent storage as the plugin skills — data written via MCP is visible to plugin skills and vice versa.
 

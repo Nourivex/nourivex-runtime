@@ -54,14 +54,15 @@ Add to `opencode.json`:
     "nourivex": {
       "type": "local",
       "command": ["npx", "-y", "nourivex-mcp-server"],
-      "env": { "NOURIVEX_PROJECT_ROOT": "." },
       "enabled": true
     }
   }
 }
 ```
 
-**Available MCP tools:** goals (7), memory (8), sessions (3), todos (8) — see README.md for full list.
+> The MCP server auto-detects the project root via `process.cwd()` — no `NOURIVEX_PROJECT_ROOT` env var needed.
+
+**Available MCP tools:** goals (7), memory (8), sessions (3), todos (7) — see README.md for full list.
 
 > Plugin and MCP modes coexist — the plugin handles agentic workflows, MCP provides atomic tool access to the same `.nourivex/` storage.
 
