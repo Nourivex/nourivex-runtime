@@ -1,5 +1,5 @@
 {
-  "name": "@nourivex/mcp-server",
+  "name": "nourivex-mcp-server",
   "version": "5.0.0",
   "description": "Nourivex Runtime MCP Server - 26 structured tools for engineering discipline (goals, memory, todos, session)",
   "type": "module",
