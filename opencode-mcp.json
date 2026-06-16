@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "nourivex": {
+      "command": "node",
+      "args": ["./mcp/dist/server.js"],
+      "env": {
+        "NOURIVEX_PROJECT_ROOT": "."
+      }
+    }
+  }
+}

@@ -116,9 +116,21 @@ export async function initCommand(options) {
             const pluginEntry = isGlobal ? 'nourivex-runtime' : `./${platformConfig.skillPath}/SKILL.md`;
             if (!config.plugin.includes(pluginEntry)) {
                 config.plugin.push(pluginEntry);
-                await fs.writeJson(configPath, config, { spaces: 2 });
-                console.log(chalk.green('✅ Updated opencode.json'));
             }
+            if (!config.mcpServers) {
+                config.mcpServers = {};
+            }
+            if (!config.mcpServers.nourivex) {
+                config.mcpServers.nourivex = {
+                    command: 'node',
+                    args: ['./mcp/dist/server.js'],
+                    env: {
+                        NOURIVEX_PROJECT_ROOT: '.'
+                    }
+                };
+            }
+            await fs.writeJson(configPath, config, { spaces: 2 });
+            console.log(chalk.green('✅ Updated opencode.json'));
         }
         console.log(chalk.blue.bold('\n✨ Installation complete!\n'));
         console.log(chalk.white('Next steps:'));

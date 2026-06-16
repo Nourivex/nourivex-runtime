@@ -5,6 +5,7 @@ import { initCommand } from './commands/init.js';
 import { memoryCommand } from './commands/memory.js';
 import { goalsCommand } from './commands/goals.js';
 import { todosCommand } from './commands/todos.js';
+import { mcpCommand } from './commands/mcp.js';
 
 const program = new Command();
 
@@ -46,5 +47,11 @@ program
   .option('--show <id>', 'Show full todo list with all items')
   .option('--progress', 'Show visual progress bar and stats')
   .action(todosCommand);
+
+program
+  .command('mcp')
+  .description('Start the Nourivex MCP server')
+  .option('--project-root <path>', 'Project root for .nourivex storage (default: cwd)')
+  .action(mcpCommand);
 
 program.parse();
