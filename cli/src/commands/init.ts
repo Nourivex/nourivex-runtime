@@ -85,10 +85,15 @@ export async function initCommand(options: InitOptions) {
   const skillDir = path.join(targetDir, platformConfig.skillPath);
 
   // Check if already installed
-  if (await fs.pathExists(skillDir) && !force) {
-    console.log(chalk.yellow(`⚠️  Nourivex Runtime already installed at: ${skillDir}`));
-    console.log(chalk.gray('Use --force to reinstall'));
-    process.exit(0);
+  if (await fs.pathExists(skillDir)) {
+    if (!force) {
+      console.log(chalk.yellow(`⚠️  Nourivex Runtime already installed at: ${skillDir}`));
+      console.log(chalk.gray('Use --force to reinstall'));
+      process.exit(0);
+    }
+    // Clean old installation so stale files don't linger
+    await fs.remove(skillDir);
+    console.log(chalk.gray(`🧹 Removed old installation`));
   }
 
   try {
@@ -138,9 +143,22 @@ export async function initCommand(options: InitOptions) {
       const pluginEntry = isGlobal ? 'nourivex-runtime' : `./${platformConfig.skillPath}/SKILL.md`;
       if (!config.plugin.includes(pluginEntry)) {
         config.plugin.push(pluginEntry);
-        await fs.writeJson(configPath, config, { spaces: 2 });
-        console.log(chalk.green('✅ Updated opencode.json'));
       }
+
+      if (!config.mcp) {
+        config.mcp = {};
+      }
+
+      if (!config.mcp.nourivex) {
+        config.mcp.nourivex = {
+          type: 'local',
+          command: ['npx', '-y', 'nourivex-mcp-server'],
+          enabled: true
+        };
+      }
+
+      await fs.writeJson(configPath, config, { spaces: 2 });
+      console.log(chalk.green('✅ Updated opencode.json'));
     }
 
     console.log(chalk.blue.bold('\n✨ Installation complete!\n'));
